@@ -1,0 +1,25 @@
+.card {
+  height: fit-content;
+  margin-top: 100px;
+  margin-bottom: 200px;
+  width: fit-content;
+  background-color: rgba(205, 211, 204, 0.5);
+  padding: 10px;
+}
+.container {
+  height: 100vw;
+  align-content: center;
+}
+.login_btn {
+  color: black;
+  background-color: #ffc312;
+  width: 100px;
+}
+
+.login_btn:hover {
+  color: black;
+  background-color: white;
+}
+.login-form {
+  width: 90%;
+}
