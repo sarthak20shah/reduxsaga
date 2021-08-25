@@ -3,6 +3,8 @@ import { Form, Input, InputNumber, Button } from "antd";
 import { useHistory } from "react-router";
 import { Formik, useFormik, withFormik } from "formik";
 import FormList from "antd/lib/form/FormList";
+import { getUser, setUser } from "../redux/ducks/user";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const layout = {
   labelCol: { span: 8 },
@@ -22,6 +24,8 @@ const validateMessages = {
 };
 
 function Addnew() {
+  const dispatch = useAppDispatch();
+  const newData = useAppSelector((state) => state.user.user);
   interface error1 {
     name?: string;
     email?: string;
@@ -56,18 +60,20 @@ function Addnew() {
     },
     validate,
     onSubmit: (values) => {
-      let latestData: any = localStorage.getItem("tableData");
+      // let latestData: any = localStorage.getItem("tableData");
       // console.log("latestData", latestData);
-      let newData = JSON.parse(latestData);
+      // let newData = JSON.parse(latestData);
       // console.log("newData", newData);
       // console.log("last_id", newData[newData.length - 1].id);
       newData.push({
         id: newData[newData.length - 1].id + 1,
         name: values.name,
         email: values.email,
+        key: newData[newData.length - 1].key + 1,
       });
-      // console.log("newData", newData);
-      localStorage.setItem("tableData", JSON.stringify(newData));
+      // console.log("newData", newData[newData.length - 1].id+1);
+      // localStorage.setItem("tableData", JSON.stringify(newData));
+      dispatch(setUser(newData));
       history.push("/table");
     },
   });
@@ -87,7 +93,7 @@ function Addnew() {
     // console.log("newData", newData);
     // console.log("last_id", newData[newData.length - 1].id);
     newData.push({
-      id: newData[newData.length - 1].id + 1,
+      id: newData[newData.length - 1].id + 15,
       name: name,
       email: email,
     });

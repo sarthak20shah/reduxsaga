@@ -12,6 +12,8 @@ import { useHistory } from "react-router";
 import { toast } from "react-toastify";
 // import Modal from "antd/lib/modal/Modal";
 import { Modal } from "antd";
+import { getUser, setUser } from "../redux/ducks/user";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 interface Item {
   key: string;
@@ -76,7 +78,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
 const Ed = () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const user = useAppSelector((state) => state.user.user);
+  const [data, setData] = useState(user);
   const [editingKey, setEditingKey] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [t1, setT1] = useState({
@@ -86,6 +89,7 @@ const Ed = () => {
     email: "asa@gmail.com",
   });
   let history = useHistory();
+  const dispatch = useAppDispatch();
 
   const isEditing = (record: Item) => record.key === editingKey;
 
@@ -121,31 +125,42 @@ const Ed = () => {
       console.log("Validate Failed:", errInfo);
     }
   };
+  // const s1 = () => {
+  //   let user = useAppSelector((state) => state.user.user);
+  //   setData(user);
+  // };
+
   useEffect(() => {
-    console.log("Hello this is from console log use effect");
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("response", data);
-        // setData(data);
-        if (localStorage.getItem("tableData") === null)
-          localStorage.setItem("tableData", JSON.stringify(data));
-        // console.log("data", data);
-        let tempData: any = localStorage.getItem("tableData");
-        let jsonTempData = JSON.parse(tempData);
-        let finaData: any = [];
-        jsonTempData.map((ele: any) => {
-          let temp: any = {};
-          temp.key = ele.id;
-          temp.name = ele.name;
-          temp.id = ele.id;
-          temp.email = ele.email;
-          finaData.push(temp);
-        });
-        console.log("finalData", finaData);
-        setData(finaData);
-      });
-  }, []);
+    console.log("Hello this is from console log, use effect");
+    !data && dispatch(getUser());
+
+    // fetch("https://jsonplaceholder.typicode.com/users")
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log("response", data);
+    //     // setData(data);
+    //     if (localStorage.getItem("tableData") === null)
+    //       localStorage.setItem("tableData", JSON.stringify(data));
+    //     // console.log("data", data);
+    //     let tempData: any = localStorage.getItem("tableData");
+    //     let jsonTempData = JSON.parse(tempData);
+    //     let finaData: any = [];
+    //     jsonTempData.map((ele: any) => {
+    //       let temp: any = {};
+    //       temp.key = ele.id;
+    //       temp.name = ele.name;
+    //       temp.id = ele.id;
+    //       temp.email = ele.email;
+    //       finaData.push(temp);
+    //     });
+    //     console.log("finalData", finaData);
+    //     setData(finaData);
+    //   });
+  }, [dispatch]);
+
+  useEffect(() => {
+    setData(user);
+  }, [user]);
 
   const handleAdd = () => {
     // const newData: any = {
@@ -161,12 +176,14 @@ const Ed = () => {
     // setData([...data, newData]);
     history.push("/addnew");
   };
-  const dataSource: any = [...data];
+  const dataSource: any = data;
   const handleDelete = (key: React.Key) => {
     console.log("datasource", dataSource);
     let anyData: any = dataSource.filter((item: any) => item.key !== key);
     console.log("anyData", anyData);
     setData(anyData);
+    dispatch(setUser(anyData));
+    // console.log("datasource", dataSource);
   };
   let anyData2: any;
   const showModal = (key: any) => {

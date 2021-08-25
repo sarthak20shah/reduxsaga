@@ -12,17 +12,19 @@ import "antd/dist/antd.css";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { rootReducer } from "./reducers";
+// import { Provider } from "react-redux";
+import store from "./redux/configureStore";
 
 //store
-const store = createStore(rootReducer, composeWithDevTools());
 
+// sagaMiddleware.run(rootSaga);
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <App />
     </BrowserRouter>
   </Provider>,
+
   document.getElementById("root")
 );
 
